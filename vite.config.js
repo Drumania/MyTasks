@@ -10,6 +10,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg", "robots.txt"],
       manifest: false,
+      devOptions: {
+        enabled: true,
+      },
     }),
   ],
   server: {

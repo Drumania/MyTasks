@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { registerSW } from "virtual:pwa-register";
-import { Button } from "primereact/button";
 
 export default function UpdateBanner() {
   const [needRefresh, setNeedRefresh] = useState(false);
