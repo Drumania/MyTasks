@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "@/layout"; // layout.jsx exporta por default
+import Layout from "@/Layout"; // layout.jsx exporta por default
 import Home from "@/pages/Home";
 import CalendarView from "@/pages/Calendar";
 import Login from "@/pages/Login";
