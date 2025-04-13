@@ -165,6 +165,31 @@ body {
 .btn-new {
   background: var(--pri-color);
   color: var(--white-color);
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.update-banner {
+  position: fixed;
+  bottom: -100px;
+  left: 0;
+  width: 100%;
+  background: #198754;
+  color: white;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-size: 0.95rem;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.update-banner.show {
+  bottom: 0;
+  opacity: 1;
 }
 
 /* main scrollea */

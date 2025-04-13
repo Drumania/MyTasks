@@ -15,6 +15,10 @@ export default function Topbar({ setModalVisible }) {
 
       {user && (
         <div className="d-flex align-items-center gap-2">
+          <div className="dots pe-3">
+            <i className="pi pi-calendar"></i>
+          </div>
+
           <button
             className="btn btn-sm btn-new px-2 py-1"
             title="Nueva tarea"

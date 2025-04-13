@@ -15,6 +15,7 @@ export default function Home() {
     Mañana: true,
     "Pasado mañana": true,
   });
+  const [showCompleted, setShowCompleted] = useState({});
 
   const priorityWeight = {
     alta: 1,
@@ -24,6 +25,13 @@ export default function Home() {
 
   const toggleCollapsed = (label) => {
     setCollapsed((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
+
+  const toggleShowCompleted = (label) => {
+    setShowCompleted((prev) => ({
       ...prev,
       [label]: !prev[label],
     }));
@@ -138,8 +146,13 @@ export default function Home() {
               const label = getLabelForDate(dateKey);
               const isTodayGroup = label === "Hoy";
               const isCollapsed = collapsed[label] && !isTodayGroup;
-              const sortedItems = sortByPriority(items);
               const done = items.filter((t) => t.completed).length;
+              const pendingTasks = sortByPriority(
+                items.filter((t) => !t.completed)
+              );
+              const completedTasks = sortByPriority(
+                items.filter((t) => t.completed)
+              );
 
               return (
                 <div key={dateKey} className="mb-4" data-datekey={dateKey}>
@@ -148,27 +161,17 @@ export default function Home() {
                     style={{ cursor: !isTodayGroup ? "pointer" : "default" }}
                     onClick={() => !isTodayGroup && toggleCollapsed(label)}
                   >
-                    {progress === 100 ? (
-                      <div className="check-completed text-success d-flex align-items-center gap-2 mb-3">
-                        <i className="pi pi-check-circle fs-4" />
-                        <span className="fw-semibold">
-                          ¡Todas las tareas de hoy están completadas!
-                        </span>
-                      </div>
-                    ) : (
-                      <span>
-                        {label}{" "}
-                        <span
-                          className={`badge bg-${getProgressColorForGroup(
-                            done,
-                            items.length
-                          )}`}
-                        >
-                          ({done} / {items.length})
-                        </span>
+                    <span>
+                      {label}{" "}
+                      <span
+                        className={`badge bg-${getProgressColorForGroup(
+                          done,
+                          items.length
+                        )}`}
+                      >
+                        ({done} / {items.length})
                       </span>
-                    )}
-
+                    </span>
                     {!isTodayGroup && (
                       <i
                         className={`pi ${
@@ -180,7 +183,7 @@ export default function Home() {
 
                   {!isCollapsed && (
                     <div className="d-flex flex-column gap-2">
-                      {sortedItems.map((task) => (
+                      {pendingTasks.map((task) => (
                         <ListCard
                           key={task.id}
                           taskId={task.id}
@@ -190,12 +193,40 @@ export default function Home() {
                           assignedTo={null}
                           completed={task.completed}
                           onToggle={toggleCompleted}
-                          {...(label === "Hoy" &&
-                            !task.completed && {
-                              onMoveToTomorrow: () => moveToTomorrow(task.id),
-                            })}
+                          {...(label === "Hoy" && {
+                            onMoveToTomorrow: () => moveToTomorrow(task.id),
+                          })}
                         />
                       ))}
+
+                      {completedTasks.length > 0 && (
+                        <>
+                          <button
+                            className="btn btn-sm btn-link text-secondary text-start mt-2"
+                            onClick={() => toggleShowCompleted(label)}
+                          >
+                            {showCompleted[label] ? "Ocultar" : "Ver"} tareas
+                            terminadas
+                          </button>
+
+                          {showCompleted[label] && (
+                            <div className="d-flex flex-column gap-2">
+                              {completedTasks.map((task) => (
+                                <ListCard
+                                  key={task.id}
+                                  taskId={task.id}
+                                  title={task.title}
+                                  date={task.date?.toDate()}
+                                  priority={task.priority}
+                                  assignedTo={null}
+                                  completed={task.completed}
+                                  onToggle={toggleCompleted}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
