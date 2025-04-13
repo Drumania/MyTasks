@@ -16,49 +16,48 @@ export default function Topbar({ setModalVisible }) {
       {user && (
         <div className="d-flex align-items-center gap-2">
           <button
-            className="btn btn-sm btn-primary px-2 py-1"
+            className="btn btn-sm btn-new px-2 py-1"
             title="Nueva tarea"
             onClick={() => setModalVisible(true)}
           >
             <i className="pi pi-plus" />
           </button>
+          {/*
+           */}
 
-          <img
-            src={user.photoURL || "https://placehold.co/32x32?text=👤"}
-            alt="Avatar"
-            className="rounded-circle"
-            style={{ width: 32, height: 32, objectFit: "cover" }}
-          />
-
-          <Button
-            icon="pi pi-ellipsis-v"
-            className="p-button-text p-0"
-            onClick={(e) => op.current.toggle(e)}
-            aria-haspopup
-            aria-controls="user_menu"
-          />
+          <div className="dots" onClick={(e) => op.current.toggle(e)}>
+            <i className="pi pi-ellipsis-v"></i>
+          </div>
 
           <OverlayPanel ref={op} id="user_menu">
             <div
               className="d-flex flex-column gap-2"
               style={{ minWidth: "150px" }}
             >
-              <button
-                className="btn btn-sm btn-outline-secondary w-100"
+              <div className="pb-3 mb-2 border-bottom">
+                <img
+                  src={user.photoURL || "https://placehold.co/32x32?text=👤"}
+                  alt="Avatar"
+                  className="rounded-circle"
+                  style={{ width: 32, height: 32, objectFit: "cover" }}
+                />
+                <span> {user.displayName} </span>
+                <br />
+              </div>
+
+              <span
+                className="w-100 py-3 "
                 onClick={() => {
                   op.current.hide();
                   setSettingsVisible(true);
                 }}
               >
                 Configuración
-              </button>
+              </span>
 
-              <button
-                className="btn btn-sm btn-outline-danger w-100"
-                onClick={logout}
-              >
+              <span className="w-100 py-3 text-danger" onClick={logout}>
                 Logout
-              </button>
+              </span>
             </div>
           </OverlayPanel>
         </div>

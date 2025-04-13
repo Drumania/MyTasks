@@ -1,12 +1,12 @@
 :root {
   --gap-number: 10px;
-  --light-orange-color: #ff7900;
-  --orange-color: #ff4e00;
+  --pri-color: #2adeb4;
+  --sec-color: #ed53c4;
   --white-color: #f5f5f5;
   --text-color: #4b4b4b;
   --black-color: #151515;
   --font-size: 16px;
-  --font-family: "Inter", sans-serif;
+  --font-family: "Jost", sans-serif;
   --border-radius: 15px;
   --box-shadow: 10px 10px 40px 1px rgba(0, 0, 0, 0.21);
   --swiper-theme-color: #ff4e00;
@@ -76,7 +76,7 @@ img {
 body {
   margin: 0;
   padding: 0;
-  font-family: "Inter", "Segoe UI", sans-serif;
+  font-family: var(--font-family);
   background-color: #f8f9fa;
   color: #212529;
 }
@@ -153,6 +153,20 @@ body {
   color: #6c757d;
 }
 
+.topbar .dots {
+  width: 30px;
+  color: var(--text-color);
+  background-color: transparent;
+  border: 0;
+  text-align: end;
+  padding-right: 2px;
+}
+
+.btn-new {
+  background: var(--pri-color);
+  color: var(--white-color);
+}
+
 /* main scrollea */
 main.scroll-mac {
   overflow-y: auto;
@@ -184,15 +198,24 @@ main.scroll-mac {
   padding: 1rem 1.25rem;
 }
 
-/* Badges para prioridad */
-.p-badge-danger {
-  background-color: #dc3545 !important;
+.check-success {
+  color: #44d716;
 }
-.p-badge-warning {
+
+.check-stand {
+  color: #cccccc;
+}
+
+.bg-high {
+  background-color: #dc3545;
+}
+
+.bg-medium {
   background-color: #ffc107 !important;
   color: #212529 !important;
 }
-.p-badge-success {
+
+.bg-low {
   background-color: #198754 !important;
 }
 
@@ -336,5 +359,11 @@ button.btn {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 1rem 0;
   }
 }

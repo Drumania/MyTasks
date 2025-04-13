@@ -15,11 +15,11 @@ export default function ListCard({
   const getPriorityBadge = () => {
     switch (priority) {
       case "alta":
-        return <span className="badge bg-danger">Alta</span>;
+        return <span className="badge bg-high">&nbsp;</span>;
       case "media":
-        return <span className="badge bg-warning text-dark">Media</span>;
+        return <span className="badge bg-medium text-dark">&nbsp;</span>;
       case "baja":
-        return <span className="badge bg-success">Baja</span>;
+        return <span className="badge bg-low">&nbsp;</span>;
       default:
         return null;
     }
@@ -49,8 +49,8 @@ export default function ListCard({
         <i
           className={`pi ${
             completed
-              ? "pi-check-circle text-success"
-              : "pi-circle text-secondary"
+              ? "pi-check-circle check-success"
+              : "pi-circle check-stand"
           }`}
           style={{ fontSize: "1.2rem", cursor: "pointer" }}
           onClick={() => onToggle(taskId, !completed)}
@@ -68,7 +68,7 @@ export default function ListCard({
               title="Mover a mañana"
               onClick={onMoveToTomorrow}
             >
-              Mover a mañana <i className="pi pi-angle-right" />
+              <i className="pi pi-angle-double-right" title="Mover a mañana" />
             </span>
           )}
         </div>

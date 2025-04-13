@@ -130,26 +130,6 @@ export default function Home() {
           </div>
 
           <main className="flex-grow-1 scroll-mac p-3">
-            <h2 className="mb-2">Mis Tareas</h2>
-
-            {progress === 100 ? (
-              <div className="check-completed text-success d-flex align-items-center gap-2 mb-3">
-                <i className="pi pi-check-circle fs-4" />
-                <span className="fw-semibold">
-                  ¡Todas las tareas de hoy están completadas!
-                </span>
-              </div>
-            ) : (
-              <ProgressBar
-                value={progress}
-                showValue
-                className={`mb-3 p-progress-${getProgressColor()}`}
-                displayValueTemplate={() =>
-                  `${completedCount} de ${totalCount} completadas (${progress}%)`
-                }
-              />
-            )}
-
             {tasks.length === 0 && (
               <p className="text-muted">No tenés tareas aún.</p>
             )}
@@ -164,21 +144,31 @@ export default function Home() {
               return (
                 <div key={dateKey} className="mb-4" data-datekey={dateKey}>
                   <h4
-                    className="date-header mb-3 d-flex justify-content-between align-items-center"
+                    className="date-header w-100 mb-3 d-flex justify-content-between align-items-center"
                     style={{ cursor: !isTodayGroup ? "pointer" : "default" }}
                     onClick={() => !isTodayGroup && toggleCollapsed(label)}
                   >
-                    <span>
-                      {label}{" "}
-                      <span
-                        className={`badge bg-${getProgressColorForGroup(
-                          done,
-                          items.length
-                        )}`}
-                      >
-                        ({done} / {items.length})
+                    {progress === 100 ? (
+                      <div className="check-completed text-success d-flex align-items-center gap-2 mb-3">
+                        <i className="pi pi-check-circle fs-4" />
+                        <span className="fw-semibold">
+                          ¡Todas las tareas de hoy están completadas!
+                        </span>
+                      </div>
+                    ) : (
+                      <span>
+                        {label}{" "}
+                        <span
+                          className={`badge bg-${getProgressColorForGroup(
+                            done,
+                            items.length
+                          )}`}
+                        >
+                          ({done} / {items.length})
+                        </span>
                       </span>
-                    </span>
+                    )}
+
                     {!isTodayGroup && (
                       <i
                         className={`pi ${
