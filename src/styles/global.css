@@ -170,6 +170,21 @@ body {
   padding: 5px 10px;
 }
 
+.nav-icon {
+  color: #6c757d;
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.nav-icon .pi {
+  padding: 0 6px;
+}
+
+.nav-icon.active {
+  color: black;
+  border-bottom: 2px solid black;
+}
+
 .update-banner {
   position: fixed;
   bottom: -100px;

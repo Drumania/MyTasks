@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
-import { Button } from "primereact/button";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import UserSettingsModal from "@/components/UserSettingsModal";
 
@@ -14,11 +14,25 @@ export default function Topbar({ setModalVisible }) {
       <h1 className="fw-bold m-0 fs-4">usTasks</h1>
 
       {user && (
-        <div className="d-flex align-items-center gap-2">
-          <div className="dots pe-3">
-            <i className="pi pi-calendar"></i>
-          </div>
+        <div className="d-flex align-items-center gap-3">
+          {/* Navegación */}
+          <NavLink
+            to="/"
+            className={({ isActive }) => `nav-icon ${isActive ? "active" : ""}`}
+            title="Lista"
+          >
+            <i className="pi pi-list"></i>
+          </NavLink>
 
+          <NavLink
+            to="/calendar"
+            className={({ isActive }) => `nav-icon ${isActive ? "active" : ""}`}
+            title="Calendario"
+          >
+            <i className="pi pi-calendar"></i>
+          </NavLink>
+
+          {/* Nueva tarea */}
           <button
             className="btn btn-sm btn-new px-2 py-1"
             title="Nueva tarea"
@@ -26,9 +40,8 @@ export default function Topbar({ setModalVisible }) {
           >
             <i className="pi pi-plus" />
           </button>
-          {/*
-           */}
 
+          {/* Menú usuario */}
           <div className="dots" onClick={(e) => op.current.toggle(e)}>
             <i className="pi pi-ellipsis-v"></i>
           </div>
@@ -46,11 +59,10 @@ export default function Topbar({ setModalVisible }) {
                   style={{ width: 32, height: 32, objectFit: "cover" }}
                 />
                 <span> {user.displayName} </span>
-                <br />
               </div>
 
               <span
-                className="w-100 py-3 "
+                className="w-100 py-2"
                 onClick={() => {
                   op.current.hide();
                   setSettingsVisible(true);
@@ -59,7 +71,7 @@ export default function Topbar({ setModalVisible }) {
                 Configuración
               </span>
 
-              <span className="w-100 py-3 text-danger" onClick={logout}>
+              <span className="w-100 py-2 text-danger" onClick={logout}>
                 Logout
               </span>
             </div>
