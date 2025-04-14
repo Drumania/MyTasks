@@ -290,6 +290,15 @@ main.scroll-mac {
   color: #cccccc;
 }
 
+.transition-task {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.task-fade {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
 .bg-high {
   background-color: #dc3545;
 }

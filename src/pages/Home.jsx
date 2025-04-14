@@ -17,6 +17,8 @@ export default function Home() {
     "Pasado mañana": true,
   });
   const [showCompleted, setShowCompleted] = useState({});
+  const [fadingTasks, setFadingTasks] = useState([]);
+  const [completingTaskId, setCompletingTaskId] = useState(null);
 
   const { user, loading } = useAuth();
 
@@ -80,11 +82,21 @@ export default function Home() {
     return diff >= 0 && diff <= 2;
   });
 
-  const toggleCompleted = async (taskId, newValue) => {
-    try {
-      await updateDoc(doc(db, "tasks", taskId), { completed: newValue });
-    } catch (err) {
-      console.error("Error al actualizar tarea:", err);
+  const toggleCompleted = (taskId, newValue) => {
+    if (newValue === true) {
+      setCompletingTaskId(taskId); // inicia fade
+
+      setTimeout(async () => {
+        try {
+          await updateDoc(doc(db, "tasks", taskId), { completed: true });
+          setCompletingTaskId(null); // limpia
+        } catch (err) {
+          console.error("Error al completar tarea:", err);
+        }
+      }, 400); // delay para ver el fade
+    } else {
+      // si desmarcás, lo hacemos directo
+      updateDoc(doc(db, "tasks", taskId), { completed: false });
     }
   };
 
@@ -119,18 +131,9 @@ export default function Home() {
         <main className="flex-grow-1 scroll-mac p-3">
           {!tasks.length && (
             <>
-              <Skeleton width="20%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
-              <Skeleton width="100%" height="2rem" className="mb-3" />
+              {Array.from({ length: 12 }).map((_, i) => (
+                <Skeleton key={i} width="100%" height="2rem" className="mb-3" />
+              ))}
             </>
           )}
 
@@ -185,6 +188,7 @@ export default function Home() {
                         assignedTo={null}
                         completed={task.completed}
                         onToggle={toggleCompleted}
+                        isFadingOut={completingTaskId === task.id} // 👈 importante
                         {...(label === "Hoy" && {
                           onMoveToTomorrow: () => moveToTomorrow(task.id),
                         })}
@@ -212,7 +216,7 @@ export default function Home() {
                                 priority={task.priority}
                                 assignedTo={null}
                                 completed={task.completed}
-                                onToggle={toggleCompleted}
+                                onToggle={() => toggleCompleted(task.id, false)}
                               />
                             ))}
                           </div>
