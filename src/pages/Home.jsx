@@ -114,119 +114,117 @@ export default function Home() {
   };
 
   return (
-    <div className="container-fluid vh-100 overflow-hidden">
-      <div className="row h-100">
-        <div className="col-12 d-flex flex-column p-0 content-area">
-          <main className="flex-grow-1 scroll-mac p-3">
-            {!tasks.length && (
-              <>
-                <Skeleton width="20%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-                <Skeleton width="100%" height="2rem" className="mb-3" />
-              </>
-            )}
+    <div className="row ">
+      <div className="col-12 d-flex flex-column p-0 content-area">
+        <main className="flex-grow-1 scroll-mac p-3">
+          {!tasks.length && (
+            <>
+              <Skeleton width="20%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <Skeleton width="100%" height="2rem" className="mb-3" />
+            </>
+          )}
 
-            {groupedTasks.map(([dateKey, items]) => {
-              const label = getLabelForDate(dateKey);
-              const isTodayGroup = label === "Hoy";
-              const isCollapsed = collapsed[label] && !isTodayGroup;
-              const done = items.filter((t) => t.completed).length;
-              const pendingTasks = sortByPriority(
-                items.filter((t) => !t.completed)
-              );
-              const completedTasks = sortByPriority(
-                items.filter((t) => t.completed)
-              );
+          {groupedTasks.map(([dateKey, items]) => {
+            const label = getLabelForDate(dateKey);
+            const isTodayGroup = label === "Hoy";
+            const isCollapsed = collapsed[label] && !isTodayGroup;
+            const done = items.filter((t) => t.completed).length;
+            const pendingTasks = sortByPriority(
+              items.filter((t) => !t.completed)
+            );
+            const completedTasks = sortByPriority(
+              items.filter((t) => t.completed)
+            );
 
-              return (
-                <div key={dateKey} className="mb-4" data-datekey={dateKey}>
-                  <h4
-                    className="date-header w-100 mb-3 d-flex justify-content-between align-items-center"
-                    style={{ cursor: !isTodayGroup ? "pointer" : "default" }}
-                    onClick={() => !isTodayGroup && toggleCollapsed(label)}
-                  >
-                    <span>
-                      {label}{" "}
-                      <span
-                        className={`badge bg-${getProgressColorForGroup(
-                          done,
-                          items.length
-                        )}`}
-                      >
-                        ({done} / {items.length})
-                      </span>
+            return (
+              <div key={dateKey} className="mb-4" data-datekey={dateKey}>
+                <h4
+                  className="date-header w-100 mb-3 d-flex justify-content-between align-items-center"
+                  style={{ cursor: !isTodayGroup ? "pointer" : "default" }}
+                  onClick={() => !isTodayGroup && toggleCollapsed(label)}
+                >
+                  <span>
+                    {label}{" "}
+                    <span
+                      className={`badge bg-${getProgressColorForGroup(
+                        done,
+                        items.length
+                      )}`}
+                    >
+                      ({done} / {items.length})
                     </span>
-                    {!isTodayGroup && (
-                      <i
-                        className={`pi ${
-                          isCollapsed ? "pi-chevron-down" : "pi-chevron-up"
-                        }`}
-                      />
-                    )}
-                  </h4>
-
-                  {!isCollapsed && (
-                    <div className="d-flex flex-column gap-2">
-                      {pendingTasks.map((task) => (
-                        <ListCard
-                          key={task.id}
-                          taskId={task.id}
-                          title={task.title}
-                          date={task.date?.toDate()}
-                          priority={task.priority}
-                          assignedTo={null}
-                          completed={task.completed}
-                          onToggle={toggleCompleted}
-                          {...(label === "Hoy" && {
-                            onMoveToTomorrow: () => moveToTomorrow(task.id),
-                          })}
-                        />
-                      ))}
-
-                      {completedTasks.length > 0 && (
-                        <>
-                          <button
-                            className="btn btn-sm btn-link text-secondary text-start mt-2"
-                            onClick={() => toggleShowCompleted(label)}
-                          >
-                            {showCompleted[label] ? "Ocultar" : "Ver"} tareas
-                            terminadas
-                          </button>
-
-                          {showCompleted[label] && (
-                            <div className="d-flex flex-column gap-2">
-                              {completedTasks.map((task) => (
-                                <ListCard
-                                  key={task.id}
-                                  taskId={task.id}
-                                  title={task.title}
-                                  date={task.date?.toDate()}
-                                  priority={task.priority}
-                                  assignedTo={null}
-                                  completed={task.completed}
-                                  onToggle={toggleCompleted}
-                                />
-                              ))}
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
+                  </span>
+                  {!isTodayGroup && (
+                    <i
+                      className={`pi ${
+                        isCollapsed ? "pi-chevron-down" : "pi-chevron-up"
+                      }`}
+                    />
                   )}
-                </div>
-              );
-            })}
-          </main>
-        </div>
+                </h4>
+
+                {!isCollapsed && (
+                  <div className="d-flex flex-column gap-2">
+                    {pendingTasks.map((task) => (
+                      <ListCard
+                        key={task.id}
+                        taskId={task.id}
+                        title={task.title}
+                        date={task.date?.toDate()}
+                        priority={task.priority}
+                        assignedTo={null}
+                        completed={task.completed}
+                        onToggle={toggleCompleted}
+                        {...(label === "Hoy" && {
+                          onMoveToTomorrow: () => moveToTomorrow(task.id),
+                        })}
+                      />
+                    ))}
+
+                    {completedTasks.length > 0 && (
+                      <>
+                        <button
+                          className="btn btn-sm btn-link text-secondary text-start mt-2"
+                          onClick={() => toggleShowCompleted(label)}
+                        >
+                          {showCompleted[label] ? "Ocultar" : "Ver"} tareas
+                          terminadas
+                        </button>
+
+                        {showCompleted[label] && (
+                          <div className="d-flex flex-column gap-2">
+                            {completedTasks.map((task) => (
+                              <ListCard
+                                key={task.id}
+                                taskId={task.id}
+                                title={task.title}
+                                date={task.date?.toDate()}
+                                priority={task.priority}
+                                assignedTo={null}
+                                completed={task.completed}
+                                onToggle={toggleCompleted}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </main>
       </div>
 
       <TaskFormModal

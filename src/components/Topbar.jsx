@@ -10,7 +10,7 @@ export default function Topbar({ setModalVisible }) {
   const [settingsVisible, setSettingsVisible] = useState(false);
 
   return (
-    <div className="topbar d-flex justify-content-between align-items-center px-3">
+    <div className="topbar topbar-blur d-flex justify-content-between align-items-center px-3">
       <h1 className="fw-bold m-0 fs-4">usTasks</h1>
 
       {user && (
