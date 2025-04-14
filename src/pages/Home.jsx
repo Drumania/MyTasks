@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Topbar from "@/components/Topbar";
 import ListCard from "@/components/ListCard";
 import TaskFormModal from "@/components/TaskFormModal";
 import useTasks from "@/hooks/useTasks";
 import { doc, updateDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { formatDate } from "@/utils/formatDate";
-import { ProgressBar } from "primereact/progressbar";
+import { Skeleton } from "primereact/skeleton";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Home() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -17,42 +17,41 @@ export default function Home() {
   });
   const [showCompleted, setShowCompleted] = useState({});
 
-  const priorityWeight = {
-    alta: 1,
-    media: 2,
-    baja: 3,
-  };
+  const { user, loading } = useAuth();
+  if (loading)
+    return (
+      <div className="vh-100 d-flex justify-content-center align-items-center bg-white">
+        <div className="text-center">
+          <img src="/logo.png" alt="usTasks" width="72" className="mb-3" />
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
 
-  const toggleCollapsed = (label) => {
-    setCollapsed((prev) => ({
-      ...prev,
-      [label]: !prev[label],
-    }));
-  };
+  if (!user) return null;
 
-  const toggleShowCompleted = (label) => {
-    setShowCompleted((prev) => ({
-      ...prev,
-      [label]: !prev[label],
-    }));
-  };
+  const priorityWeight = { alta: 1, media: 2, baja: 3 };
+
+  const toggleCollapsed = (label) =>
+    setCollapsed((prev) => ({ ...prev, [label]: !prev[label] }));
+  const toggleShowCompleted = (label) =>
+    setShowCompleted((prev) => ({ ...prev, [label]: !prev[label] }));
 
   const getLabelForDate = (dateKey) => {
     const today = new Date();
     const target = new Date(dateKey);
-    target.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
+    target.setHours(0, 0, 0, 0);
     const diff = Math.floor((target - today) / (1000 * 60 * 60 * 24));
-    switch (diff) {
-      case 0:
-        return "Hoy";
-      case 1:
-        return "Mañana";
-      case 2:
-        return "Pasado mañana";
-      default:
-        return formatDate(target);
-    }
+    return diff === 0
+      ? "Hoy"
+      : diff === 1
+      ? "Mañana"
+      : diff === 2
+      ? "Pasado mañana"
+      : formatDate(target);
   };
 
   const groupTasksByDate = (tasks) => {
@@ -72,41 +71,16 @@ export default function Home() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     target.setHours(0, 0, 0, 0);
-    const diffInDays = Math.floor((target - today) / (1000 * 60 * 60 * 24));
-    return diffInDays >= 0 && diffInDays <= 2;
+    const diff = Math.floor((target - today) / (1000 * 60 * 60 * 24));
+    return diff >= 0 && diff <= 2;
   });
-
-  const todayTasksGroup = groupedTasks.find(
-    ([dateKey]) => getLabelForDate(dateKey) === "Hoy"
-  );
-
-  const todayTasks = todayTasksGroup ? todayTasksGroup[1] : [];
-  const completedCount = todayTasks.filter((t) => t.completed).length;
-  const totalCount = todayTasks.length;
-  const progress =
-    totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-
-  const getProgressColor = () => {
-    if (progress >= 80) return "success";
-    if (progress >= 40) return "warning";
-    return "danger";
-  };
 
   const toggleCompleted = async (taskId, newValue) => {
     try {
-      const ref = doc(db, "tasks", taskId);
-      await updateDoc(ref, { completed: newValue });
+      await updateDoc(doc(db, "tasks", taskId), { completed: newValue });
     } catch (err) {
       console.error("Error al actualizar tarea:", err);
     }
-  };
-
-  const sortByPriority = (tasks) => {
-    return [...tasks].sort((a, b) => {
-      const p1 = priorityWeight[a.priority] || 4;
-      const p2 = priorityWeight[b.priority] || 4;
-      return p1 - p2;
-    });
   };
 
   const moveToTomorrow = async (taskId) => {
@@ -115,18 +89,23 @@ export default function Home() {
     tomorrow.setHours(12, 0, 0, 0);
 
     try {
-      const ref = doc(db, "tasks", taskId);
-      await updateDoc(ref, { date: Timestamp.fromDate(tomorrow) });
+      await updateDoc(doc(db, "tasks", taskId), {
+        date: Timestamp.fromDate(tomorrow),
+      });
     } catch (err) {
       console.error("Error al mover tarea a mañana:", err);
     }
   };
 
+  const sortByPriority = (tasks) =>
+    [...tasks].sort(
+      (a, b) =>
+        (priorityWeight[a.priority] || 4) - (priorityWeight[b.priority] || 4)
+    );
+
   const getProgressColorForGroup = (done, total) => {
     const percent = total > 0 ? (done / total) * 100 : 0;
-    if (percent >= 80) return "success";
-    if (percent >= 40) return "warning";
-    return "danger";
+    return percent >= 80 ? "success" : percent >= 40 ? "warning" : "danger";
   };
 
   return (
@@ -134,8 +113,8 @@ export default function Home() {
       <div className="row h-100">
         <div className="col-12 d-flex flex-column p-0 content-area">
           <main className="flex-grow-1 scroll-mac p-3">
-            {tasks.length === 0 && (
-              <p className="text-muted">No tenés tareas aún.</p>
+            {!tasks.length && (
+              <Skeleton width="100%" height="2rem" className="mb-3" />
             )}
 
             {groupedTasks.map(([dateKey, items]) => {
