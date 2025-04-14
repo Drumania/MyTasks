@@ -276,6 +276,12 @@ main.scroll-mac {
   padding: 1rem 1.25rem;
 }
 
+.swipe-action {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .check-success {
   color: #44d716;
 }

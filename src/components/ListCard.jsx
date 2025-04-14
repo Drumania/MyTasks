@@ -1,4 +1,5 @@
-import { Checkbox } from "primereact/checkbox";
+import { SwipeableList, SwipeableListItem } from "react-swipeable-list";
+import "react-swipeable-list/dist/styles.css";
 import { Avatar } from "primereact/avatar";
 import { formatDate } from "@/utils/formatDate";
 
@@ -11,6 +12,8 @@ export default function ListCard({
   completed,
   onToggle,
   onMoveToTomorrow,
+  onEdit,
+  onDelete,
 }) {
   const getPriorityBadge = () => {
     switch (priority) {
@@ -38,13 +41,12 @@ export default function ListCard({
     );
   };
 
-  return (
+  const content = (
     <div
       className={`d-flex justify-content-between align-items-center px-3 py-2 rounded ${
         completed ? "bg-light text-muted" : "bg-white"
       }`}
     >
-      {/* Left: check + title */}
       <div className="d-flex align-items-center gap-2">
         <i
           className={`pi ${
@@ -54,28 +56,55 @@ export default function ListCard({
           }`}
           style={{ fontSize: "1.2rem", cursor: "pointer" }}
           onClick={() => onToggle(taskId, !completed)}
-          title={completed ? "Tarea completada" : "Marcar como completada"}
         />
         <span className="fw-normal">{title}</span>
       </div>
-
-      {/* Right: metadata + controls */}
       <div className="d-flex align-items-center gap-2">
-        <div className="d-flex flex-column align-items-center">
-          {onMoveToTomorrow && (
-            <span
-              className="btn btn-sm  "
-              title="Mover a mañana"
-              onClick={onMoveToTomorrow}
-            >
-              <i className="pi pi-angle-double-right" title="Mover a mañana" />
-            </span>
-          )}
-        </div>
-
+        {onMoveToTomorrow && (
+          <span
+            className="btn btn-sm"
+            title="Mover a mañana"
+            onClick={onMoveToTomorrow}
+          >
+            <i className="pi pi-angle-double-right" />
+          </span>
+        )}
         {getAvatar()}
         {getPriorityBadge()}
       </div>
     </div>
+  );
+
+  return (
+    <SwipeableList threshold={0.25}>
+      <SwipeableListItem
+        swipeLeft={{
+          content: (
+            <div className="swipe-action bg-danger text-white d-flex justify-content-end align-items-center px-3">
+              <button
+                className="btn btn-sm btn-light"
+                onClick={() => onDelete(taskId)}
+              >
+                <i className="pi pi-trash" />
+              </button>
+            </div>
+          ),
+        }}
+        swipeRight={{
+          content: (
+            <div className="swipe-action bg-warning text-dark d-flex justify-content-start align-items-center px-3">
+              <button
+                className="btn btn-sm btn-dark"
+                onClick={() => onEdit(taskId)}
+              >
+                <i className="pi pi-pencil" />
+              </button>
+            </div>
+          ),
+        }}
+      >
+        {content}
+      </SwipeableListItem>
+    </SwipeableList>
   );
 }
