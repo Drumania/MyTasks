@@ -112,7 +112,7 @@ export default function TaskFormModal({ visible, onHide }) {
       <Button
         label="Guardar tarea"
         icon="pi pi-check"
-        className="w-100"
+        className="w-100 btn-new"
         onClick={handleSubmit}
       />
     </Dialog>
