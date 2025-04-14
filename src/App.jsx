@@ -2,15 +2,15 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "@/Layout"; // layout.jsx exporta por default
 import Home from "@/pages/Home";
 import CalendarView from "@/pages/Calendar";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
 import PrivateRoute from "@/components/PrivateRoute";
+import AuthPage from "@/components/AuthPage";
 
 function App() {
   return (
     <Router>
       <Routes>
         {/* Layout común con topbar */}
+        <Route path="/auth" element={<AuthPage />} />
         <Route element={<Layout />}>
           <Route
             path="/"
@@ -29,10 +29,6 @@ function App() {
             }
           />
         </Route>
-
-        {/* Rutas públicas */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
