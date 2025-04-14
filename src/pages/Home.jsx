@@ -8,6 +8,7 @@ import { formatDate } from "@/utils/formatDate";
 import { Skeleton } from "primereact/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import splash from "@/assets/splash.png";
+import { SwipeableList } from "react-swipeable-list";
 
 export default function Home() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -178,23 +179,24 @@ export default function Home() {
 
                 {!isCollapsed && (
                   <div className="d-flex flex-column gap-2">
-                    {pendingTasks.map((task) => (
-                      <ListCard
-                        key={task.id}
-                        taskId={task.id}
-                        title={task.title}
-                        date={task.date?.toDate()}
-                        priority={task.priority}
-                        assignedTo={null}
-                        completed={task.completed}
-                        onToggle={toggleCompleted}
-                        isFadingOut={completingTaskId === task.id} // 👈 importante
-                        {...(label === "Hoy" && {
-                          onMoveToTomorrow: () => moveToTomorrow(task.id),
-                        })}
-                      />
-                    ))}
-
+                    <SwipeableList>
+                      {pendingTasks.map((task) => (
+                        <ListCard
+                          key={task.id}
+                          taskId={task.id}
+                          title={task.title}
+                          date={task.date?.toDate()}
+                          priority={task.priority}
+                          assignedTo={null}
+                          completed={task.completed}
+                          onToggle={toggleCompleted}
+                          isFadingOut={completingTaskId === task.id} // 👈 importante
+                          {...(label === "Hoy" && {
+                            onMoveToTomorrow: () => moveToTomorrow(task.id),
+                          })}
+                        />
+                      ))}
+                    </SwipeableList>
                     {completedTasks.length > 0 && (
                       <>
                         <button
