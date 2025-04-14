@@ -125,6 +125,15 @@ body {
   font-weight: 500;
 }
 
+/* splash */
+.splash {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  z-index: 1000;
+}
+
 /* Columna principal con topbar fija y scroll solo en main */
 .content-area {
   display: flex;

@@ -1,12 +1,12 @@
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
+import SplashScreen from "@/components/SplashScreen";
 
 export default function PrivateRoute({ children }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (loading) return <SplashScreen />;
+  if (!user) return <Navigate to="/login" replace />;
 
   return children;
 }

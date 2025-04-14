@@ -7,12 +7,13 @@ import {
 import { auth } from "@/firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import SplashScreen from "@/components/SplashScreen";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (user) navigate("/");
@@ -37,6 +38,8 @@ export default function Login() {
       alert("Error con Google: " + err.message);
     }
   };
+
+  if (loading) return <SplashScreen />;
 
   return (
     <div className="container py-5">

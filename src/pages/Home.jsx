@@ -7,6 +7,7 @@ import { db } from "@/firebase/firebase";
 import { formatDate } from "@/utils/formatDate";
 import { Skeleton } from "primereact/skeleton";
 import { useAuth } from "@/context/AuthContext";
+import splash from "@/assets/splash.png";
 
 export default function Home() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -18,17 +19,21 @@ export default function Home() {
   const [showCompleted, setShowCompleted] = useState({});
 
   const { user, loading } = useAuth();
-  if (loading)
+
+  if (loading) {
     return (
       <div className="vh-100 d-flex justify-content-center align-items-center bg-white">
         <div className="text-center">
-          <img src="/logo.png" alt="usTasks" width="72" className="mb-3" />
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
+          <img
+            src={splash}
+            alt="Cargando"
+            style={{ maxWidth: 200, marginBottom: 20 }}
+          />
+          <p className="text-muted">Cargando tu espacio de trabajo...</p>
         </div>
       </div>
     );
+  }
 
   if (!user) return null;
 
@@ -114,7 +119,20 @@ export default function Home() {
         <div className="col-12 d-flex flex-column p-0 content-area">
           <main className="flex-grow-1 scroll-mac p-3">
             {!tasks.length && (
-              <Skeleton width="100%" height="2rem" className="mb-3" />
+              <>
+                <Skeleton width="20%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+                <Skeleton width="100%" height="2rem" className="mb-3" />
+              </>
             )}
 
             {groupedTasks.map(([dateKey, items]) => {

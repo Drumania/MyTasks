@@ -2,8 +2,11 @@ import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import SplashScreen from "@/components/SplashScreen";
 
 export default function Register() {
+  const { loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -17,6 +20,8 @@ export default function Register() {
       alert("Error al registrar: " + err.message);
     }
   };
+
+  if (loading) return <SplashScreen />;
 
   return (
     <div className="container py-5">
